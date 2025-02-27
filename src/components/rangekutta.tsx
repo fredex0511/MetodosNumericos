@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
-import { parse } from "mathjs"; // Importamos math.js
+import { parse } from "mathjs"; 
 Chart.register(...registerables);
 
 const RungeKuttaComponent: React.FC = () => {
-  const [results, setResults] = useState<{ x: number; y: number }[]>([]);
-  const [func, setFunc] = useState<string>("x + y"); // Función por defecto
-  const [x0, setX0] = useState<number>(0); // Valor inicial de x
-  const [y0, setY0] = useState<number>(1); // Valor inicial de y
-  const [h, setH] = useState<number>(0.1); // Tamaño del paso
-  const [n, setN] = useState<number>(10); // Número de pasos
+  const [results, setResults] = useState<{ x: number; y: number; k1: number; k2: number; k3: number; k4: number }[]>([]);
+  const [func, setFunc] = useState<string>("x + y");
+  const [x0, setX0] = useState<number>(0);
+  const [y0, setY0] = useState<number>(1); 
+  const [h, setH] = useState<number>(0.1);
+  const [n, setN] = useState<number>(10);
 
   const calculate = () => {
     try {
-      const f = parse(func); // Parsear la función ingresada
-      const compiledFunc = f.compile(); // Compilar la función para evaluarla
+      const f = parse(func);
+      const compiledFunc = f.compile();
 
       const rungeKutta4 = (
         f: any,
@@ -23,8 +23,8 @@ const RungeKuttaComponent: React.FC = () => {
         y0: number,
         h: number,
         n: number
-      ): { x: number; y: number }[] => {
-        const results: { x: number; y: number }[] = [{ x: x0, y: y0 }];
+      ): { x: number; y: number; k1: number; k2: number; k3: number; k4: number }[] => {
+        const results: { x: number; y: number; k1: number; k2: number; k3: number; k4: number }[] = [];
         let x = x0;
         let y = y0;
 
@@ -35,7 +35,8 @@ const RungeKuttaComponent: React.FC = () => {
           const k4 = h * f.evaluate({ x: x + h, y: y + k3 });
           y = y + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
           x += h;
-          results.push({ x, y });
+
+          results.push({ x, y, k1, k2, k3, k4 });
         }
 
         return results;
@@ -105,7 +106,37 @@ const RungeKuttaComponent: React.FC = () => {
         />
       </div>
       <button onClick={calculate}>Calcular</button>
+
+      <h2>Gráfico</h2>
       <Line data={chartData} />
+
+      <h2>Historial de resultados</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Paso</th>
+            <th>x</th>
+            <th>y</th>
+            <th>k1</th>
+            <th>k2</th>
+            <th>k3</th>
+            <th>k4</th>
+          </tr>
+        </thead>
+        <tbody>
+          {results.map((result, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{result.x.toFixed(6)}</td>
+              <td>{result.y.toFixed(6)}</td>
+              <td>{result.k1.toFixed(6)}</td>
+              <td>{result.k2.toFixed(6)}</td>
+              <td>{result.k3.toFixed(6)}</td>
+              <td>{result.k4.toFixed(6)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

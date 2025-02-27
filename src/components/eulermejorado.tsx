@@ -6,16 +6,16 @@ Chart.register(...registerables);
 
 const EulerMejoradoComponent: React.FC = () => {
   const [results, setResults] = useState<{ x: number; y: number }[]>([]);
-  const [func, setFunc] = useState<string>("x + y"); // Función por defecto
-  const [x0, setX0] = useState<number>(0); // Valor inicial de x
-  const [y0, setY0] = useState<number>(1); // Valor inicial de y
-  const [h, setH] = useState<number>(0.1); // Tamaño del paso
-  const [n, setN] = useState<number>(10); // Número de pasos
+  const [func, setFunc] = useState<string>("x + y"); 
+  const [x0, setX0] = useState<number>(0); 
+  const [y0, setY0] = useState<number>(1);
+  const [h, setH] = useState<number>(0.1);
+  const [n, setN] = useState<number>(10);
 
   const calculate = () => {
     try {
-      const f = parse(func); // Parsear la función ingresada
-      const compiledFunc = f.compile(); // Compilar la función para evaluarla
+      const f = parse(func);
+      const compiledFunc = f.compile();
 
       const eulerMejorado = (
         f: any,
@@ -29,12 +29,12 @@ const EulerMejoradoComponent: React.FC = () => {
         let y = y0;
 
         for (let i = 0; i < n; i++) {
-          const yPred = y + h * compiledFunc.evaluate({ x, y }); // Predictor
+          const yPred = y + h * f.evaluate({ x, y });
           y =
             y +
             (h / 2) *
               (f.evaluate({ x, y }) +
-                f.evaluate({ x: x + h, y: yPred })); // Corrector
+                f.evaluate({ x: x + h, y: yPred }));
           x += h;
           results.push({ x, y });
         }
@@ -106,7 +106,29 @@ const EulerMejoradoComponent: React.FC = () => {
         />
       </div>
       <button onClick={calculate}>Calcular</button>
+
+      <h2>Gráfico</h2>
       <Line data={chartData} />
+
+      <h2>Historial de resultados</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Paso</th>
+            <th>x</th>
+            <th>y</th>
+          </tr>
+        </thead>
+        <tbody>
+          {results.map((result, index) => (
+            <tr key={index}>
+              <td>{index}</td>
+              <td>{result.x.toFixed(6)}</td>
+              <td>{result.y.toFixed(6)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

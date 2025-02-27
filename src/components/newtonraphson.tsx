@@ -27,8 +27,8 @@ const NewtonRaphsonComponent: React.FC = () => {
         let x = x0;
 
         for (let i = 0; i < maxIter; i++) {
-          const fx = compiledFunc.evaluate({ x });
-          const dfx = compiledDfunc.evaluate({ x });
+          const fx = f.evaluate({ x });
+          const dfx = df.evaluate({ x });
 
           if (Math.abs(fx) < tol) break; // Convergencia
 

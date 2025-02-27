@@ -29,10 +29,10 @@ const RungeKuttaComponent: React.FC = () => {
         let y = y0;
 
         for (let i = 0; i < n; i++) {
-          const k1 = h * compiledFunc.evaluate({ x, y });
-          const k2 = h * compiledFunc.evaluate({ x: x + h / 2, y: y + k1 / 2 });
-          const k3 = h * compiledFunc.evaluate({ x: x + h / 2, y: y + k2 / 2 });
-          const k4 = h * compiledFunc.evaluate({ x: x + h, y: y + k3 });
+          const k1 = h * f.evaluate({ x, y });
+          const k2 = h * f.evaluate({ x: x + h / 2, y: y + k1 / 2 });
+          const k3 = h * f.evaluate({ x: x + h / 2, y: y + k2 / 2 });
+          const k4 = h * f.evaluate({ x: x + h, y: y + k3 });
           y = y + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
           x += h;
           results.push({ x, y });

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
-import { parse, derivative } from "mathjs";
+import { parse } from "mathjs";
 Chart.register(...registerables);
 
 const EulerMejoradoComponent: React.FC = () => {
@@ -33,8 +33,8 @@ const EulerMejoradoComponent: React.FC = () => {
           y =
             y +
             (h / 2) *
-              (compiledFunc.evaluate({ x, y }) +
-                compiledFunc.evaluate({ x: x + h, y: yPred })); // Corrector
+              (f.evaluate({ x, y }) +
+                f.evaluate({ x: x + h, y: yPred })); // Corrector
           x += h;
           results.push({ x, y });
         }
